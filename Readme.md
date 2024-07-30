@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Валерия Киселева](https://up.htmlacademy.ru/ecmascript-individual/2/user/2460349).
-* Наставник: `Неизвестно`.
+* Наставник: [Роман Марченко](https://htmlacademy.ru/profile/id505487).
 
 ---
 
