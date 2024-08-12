@@ -6,20 +6,18 @@ import {render} from '../render.js';
 
 export default class BoardPresenter {
   tripListComponent = new TripListView();
-  component = new TripPointView();
 
-  constructor({boardContainer}) {
-    this.boardContainer = boardContainer;
+  constructor({container}) {
+    this.boardContainer = container;
   }
 
   init() {
+    render(new SortView(), this.boardContainer);
     render(this.tripListComponent, this.boardContainer);
-    render(new SortView(), this.tripListComponent.getElement());
-    render(this.component, this.tripListComponent.getElement());
-    render(new EditTripPointView(), this.component.getElement());
+    render(new EditTripPointView(), this.tripListComponent.getElement());
 
     for (let i = 0; i < 3; i++) {
-      render(new TripPointView(), this.component.getElement());
+      render(new TripPointView(), this.tripListComponent.getElement());
     }
   }
 }
