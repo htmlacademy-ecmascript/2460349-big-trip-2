@@ -48,7 +48,7 @@ const createTripPointTemplete = (point, offers, destination) => {
     </div>
   </li>
 `;
-}
+};
 
 export default class TripPointView {
   constructor({point, offers, destination}) {
