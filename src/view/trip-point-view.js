@@ -20,7 +20,7 @@ const createTripPointTemplete = (point, offers, destination) => {
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} as ${name}</h3>
+      <h3 class="event__title">${type} at ${name}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="${dateFrom}">${humanizeDate(dateFrom, DATE_FORMAT.HOURS)}</time>
@@ -54,16 +54,26 @@ export default class TripPointView extends AbstractView {
   #point = null;
   #offers = null;
   #destination = null;
+  #handleEditClick = null;
 
-  constructor({point, offers, destination}) {
+  constructor({point, offers, destination, onEditClick}) {
     super();
     this.#point = point;
     this.#offers = offers;
     this.#destination = destination;
+    this.#handleEditClick = onEditClick;
+
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#editClickHandler);
   }
 
 
   get template() {
     return createTripPointTemplete(this.#point, this.#offers, this.#destination);
   }
+
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 }
