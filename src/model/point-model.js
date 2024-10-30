@@ -4,16 +4,16 @@ import { mockOffers } from '../mock/offers.js';
 import { POINT_COUNT } from '../const.js';
 
 export default class PointsModel {
-  points = Array.from({length: POINT_COUNT}, getRandomPoint);
-  destinations = mockDestinations;
-  offers = mockOffers;
+  #points = Array.from({length: POINT_COUNT}, getRandomPoint);
+  #destinations = mockDestinations;
+  #offers = mockOffers;
 
-  getPoints() {
-    return this.points;
+  get points() {
+    return this.#points;
   }
 
   getDestination(){
-    return this.destinations;
+    return this.#destinations;
   }
 
   getDestinationId(id) {
@@ -22,7 +22,7 @@ export default class PointsModel {
   }
 
   getOffers() {
-    return this.offers;
+    return this.#offers;
   }
 
   getOfferByType(type) {
