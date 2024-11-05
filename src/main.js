@@ -6,7 +6,7 @@ const siteMainElement = document.querySelector('.trip-events');
 const siteHeaderElement = document.querySelector('.trip-main');
 const pointsModel = new PointsModel();
 const boardPresenter = new BoardPresenter({container: siteMainElement, pointsModel});
-const headerPresenter = new HeaderPresenter({container: siteHeaderElement});
+const headerPresenter = new HeaderPresenter({container: siteHeaderElement, pointsModel});
 
 headerPresenter.init();
 boardPresenter.init();

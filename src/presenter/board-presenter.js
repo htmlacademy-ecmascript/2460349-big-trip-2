@@ -3,6 +3,7 @@ import SortView from '../view/sort-view.js';
 import TripsListView from '../view/trip-list-view.js';
 import TripPointView from '../view/trip-point-view.js';
 import { render, replace } from '../framework/render.js';
+import NoPointView from '../view/no-point-view.js';
 
 export default class BoardPresenter {
   #boardContainer;
@@ -19,9 +20,22 @@ export default class BoardPresenter {
 
   init() {
     this.#tripPoints = [...this.#pointsModel.points];
+
+    if(this.#tripPoints.length === 0) {
+      this.#renderNoPoint();
+      return;
+    }
+
+    this.#renderBoard();
+  }
+
+  #renderNoPoint() {
+    render(new NoPointView(), this.#boardContainer);
+  }
+
+  #renderBoard() {
     render(new SortView(), this.#boardContainer);
     render(this.#listOfTrips, this.#boardContainer);
-
 
     for (let i = 0; i < this.#tripPoints.length; i++) {
       this.#renderPoint(this.#tripPoints[i]);
