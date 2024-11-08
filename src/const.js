@@ -6,4 +6,11 @@ const DATE_FORMAT = {
 
 const POINT_COUNT = 4;
 
-export {DATE_FORMAT, POINT_COUNT};
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
+};
+
+export {DATE_FORMAT, POINT_COUNT, FilterType};
