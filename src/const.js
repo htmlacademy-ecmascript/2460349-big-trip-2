@@ -1,7 +1,8 @@
 const DATE_FORMAT = {
   MONTH_DAY: 'MMM D',
-  HOURS: 'HH:MM',
-  FULL_DATE_TIME: 'MM/DD/YYYY HH:mm',
+  HOURS: 'HH:mm',
+  FULL_DATE_TIME: 'DD/MM/YYYY HH:mm',
+  TIME: 'HH[H] mm[M]',
 };
 
 const POINT_COUNT = 4;
