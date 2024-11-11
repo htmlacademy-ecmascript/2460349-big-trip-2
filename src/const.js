@@ -13,4 +13,10 @@ const FilterType = {
   PAST: 'past',
 };
 
-export {DATE_FORMAT, POINT_COUNT, FilterType};
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
+
+export {DATE_FORMAT, POINT_COUNT, FilterType, Mode};
