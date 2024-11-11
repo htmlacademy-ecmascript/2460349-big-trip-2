@@ -18,5 +18,10 @@ const Mode = {
   EDITING: 'EDITING',
 };
 
+const SortType = {
+  DAY: 'day',
+  PRICE: 'price',
+  TIME: 'time',
+};
 
-export {DATE_FORMAT, POINT_COUNT, FilterType, Mode};
+export {DATE_FORMAT, POINT_COUNT, FilterType, Mode, SortType};
