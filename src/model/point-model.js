@@ -12,7 +12,7 @@ export default class PointsModel {
     return this.#points;
   }
 
-  getDestination(){
+  getDestination() {
     return this.#destinations;
   }
 
