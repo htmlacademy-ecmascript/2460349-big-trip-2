@@ -1,7 +1,7 @@
 const DATE_FORMAT = {
   MONTH_DAY: 'MMM D',
   HOURS: 'HH:mm',
-  FULL_DATE_TIME: 'DD/MM/YYYY HH:mm',
+  FULL_DATE_TIME: 'DD/MM/YY HH:mm',
   TIME: 'HH[H] mm[M]',
 };
 
