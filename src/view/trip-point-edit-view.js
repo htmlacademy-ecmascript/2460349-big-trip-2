@@ -129,7 +129,7 @@ const editTripPointFormTemplete = (point, offers, checkedOffers, destination, al
         <label class="visually-hidden" for="event-start-time-${id}">From</label>
         <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${humanizeDate(dateFrom, DATE_FORMAT.FULL_DATE_TIME)}"
         &mdash;
-        <label class="visually-hidden" for="event-end-time-${id}">To</label>
+        <label class="visually-hidden" for="event-end-time-${id}">—</label>
         <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${humanizeDate(dateTo, DATE_FORMAT.FULL_DATE_TIME)}">
       </div>
 

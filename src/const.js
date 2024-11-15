@@ -1,7 +1,8 @@
 const DATE_FORMAT = {
   MONTH_DAY: 'MMM D',
-  HOURS: 'HH:MM',
-  FULL_DATE_TIME: 'MM/DD/YYYY HH:mm',
+  HOURS: 'HH:mm',
+  FULL_DATE_TIME: 'DD/MM/YY HH:mm',
+  TIME: 'HH[H] mm[M]',
 };
 
 const POINT_COUNT = 4;
@@ -18,5 +19,10 @@ const Mode = {
   EDITING: 'EDITING',
 };
 
+const SortType = {
+  DAY: 'day',
+  PRICE: 'price',
+  TIME: 'time',
+};
 
-export {DATE_FORMAT, POINT_COUNT, FilterType, Mode};
+export {DATE_FORMAT, POINT_COUNT, FilterType, Mode, SortType};
