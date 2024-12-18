@@ -7,6 +7,8 @@ const DATE_FORMAT = {
 
 const POINT_COUNT = 4;
 
+const POINT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+
 const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
@@ -25,4 +27,4 @@ const SortType = {
   TIME: 'time',
 };
 
-export {DATE_FORMAT, POINT_COUNT, FilterType, Mode, SortType};
+export {DATE_FORMAT, POINT_COUNT, POINT_TYPES, FilterType, Mode, SortType};
