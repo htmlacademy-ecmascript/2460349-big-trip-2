@@ -1,7 +1,6 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { humanizeDate } from '../utils.js/point.js';
 import { DATE_FORMAT, POINT_TYPES } from '../const.js';
-import { getOffersByType } from '../utils.js/point.js';
+import { humanizeDate, getOffersByType, getDestinationByName } from '../utils.js/point.js';
 
 
 const createOfferTemplate = (offer, checkedOffers) => {
@@ -10,7 +9,7 @@ const createOfferTemplate = (offer, checkedOffers) => {
 
   return `
   <div class="event__offer-selector">
-<input class="event__offer-checkbox  visually-hidden" id="${id}" type="checkbox" name="${id}" ${isChecked ? 'checked' : ''}>
+    <input class="event__offer-checkbox  visually-hidden" id="${id}" type="checkbox" name="${id}" ${isChecked ? 'checked' : ''}>
 
      <label class="event__offer-label" for="${id}">
        <span class="event__offer-title">${title}</span>
@@ -66,12 +65,12 @@ function createPointTypeItem(pointId, pointType, currentPointType) {
   );
 }
 
-const editTripPointFormTemplete = (state, destination, allDestinations) => {
+const editTripPointFormTemplete = (state, allDestinations) => {
   const { type, dateFrom, dateTo, basePrice, id } = state.point;
   const {offers} = state.offersForState;
   const checkedOffers = state.point.offers;
-  // console.log(checkedOffers);
-  const { name, description, pictures } = destination;
+  const { name, description, pictures } = state.destinationForState;
+
   return `
   <form class="event event--edit" action="#" method="post">
     <header class="event__header">
@@ -135,15 +134,13 @@ const editTripPointFormTemplete = (state, destination, allDestinations) => {
 };
 
 export default class EditTripPointView extends AbstractStatefulView {
-  #destination = null;
   #allDestinations = null;
   #handleFormSubmit = null;
 
   constructor({point, offers, destination, allDestinations, onFormSubmit}) {
     super();
-    this.#destination = destination;
     this.#allDestinations = allDestinations;
-    this._setState(EditTripPointView.parsePointToState({ point, offers }));
+    this._setState(EditTripPointView.parsePointToState({ point, offers, destination }));
     this.point = point;
     this.#handleFormSubmit = onFormSubmit;
     this._restoreHandlers();
@@ -160,8 +157,9 @@ export default class EditTripPointView extends AbstractStatefulView {
 
     this.element.querySelectorAll('.event__type-item input')
       .forEach((item) => item.addEventListener('change', this.#pointTypeChangeHandler));
-    // this.element.querySelector('.event__input--destination')
-    //   .addEventListener('blur', this.#pointDestinationBlurHandler);
+
+    this.element.querySelector('.event__input--destination')
+      .addEventListener('blur', this.#pointDestinationBlurHandler);
   }
 
   #pointTypeChangeHandler = (evt) => {
@@ -172,7 +170,6 @@ export default class EditTripPointView extends AbstractStatefulView {
       point: {...this._state.point, type: evt.target.value },
       offersForState: { type: evt.target.value, offers: updatedOffers },
     });
-
   };
 
   #eventChangeHandler = (evt) => {
@@ -190,17 +187,22 @@ export default class EditTripPointView extends AbstractStatefulView {
         offers: updatedCheckedOffers,
       },
     });
-
   };
 
+  #pointDestinationBlurHandler = (evt) => {
+    evt.preventDefault();
+    const updatedDestination = getDestinationByName(evt.target.value);
+    this.updateElement({
+      ...this._state,
+      point: {...this._state.point, destination: updatedDestination.id },
+      destinationForState: { ...updatedDestination },
+    });
+  };
 
-  // #pointDestinationBlurHandler = (evt) => {
-  //   const currentDestinationObject = this.#destinationAll.find((destination) => destination.id === this._state.destination);
-  //   evt.target.value = currentDestinationObject ? currentDestinationObject.name : '';
-  // };
-  static parsePointToState = ({ point, offers}) => ({
+  static parsePointToState = ({ point, offers, destination}) => ({
     point: { ...point },
     offersForState: { ...(offers || getOffersByType(point.type)) },
+    destinationForState: { ...destination }
   });
 
   static parseStateToPoint = (state) => {
@@ -220,12 +222,12 @@ export default class EditTripPointView extends AbstractStatefulView {
 
 
   get template() {
-    return editTripPointFormTemplete(this._state, this.#destination, this.#allDestinations);
+    return editTripPointFormTemplete(this._state, this.#allDestinations);
   }
 
-  reset(point, allOffers) {
+  reset(point, offer, destination) {
     this.updateElement(
-      EditTripPointView.parsePointToState({point, allOffers}),
+      EditTripPointView.parsePointToState({point, offer, destination}),
     );
   }
 

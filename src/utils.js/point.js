@@ -28,6 +28,11 @@ const getDestinationId = (id) => {
   return allDestinations.find((item) => item.id === id);
 };
 
+const getDestinationByName = (name) => {
+  const allDestinations = mockDestinations;
+  return allDestinations.find((item) => item.name === name);
+};
+
 const getOffersByType = (type) => {
   const allOffers = mockOffers;
   return allOffers.find((offer) => offer.type === type);
@@ -43,4 +48,4 @@ const sortPointByDay = (pointA, pointB) => new Date(pointA.dateFrom) - new Date(
 const sortPointByTime = (pointA, pointB) => (new Date(pointB.dateTo) - new Date(pointB.dateFrom)) - (new Date(pointA.dateTo) - new Date(pointA.dateFrom));
 const sortPointByPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
 
-export {humanizeDate, durationOfTrip, getDestinationId, getOffersByType, getOffersByTypeAndIds, sortPointByDay, sortPointByTime, sortPointByPrice};
+export {humanizeDate, durationOfTrip, getDestinationId, getDestinationByName, getOffersByType, getOffersByTypeAndIds, sortPointByDay, sortPointByTime, sortPointByPrice};

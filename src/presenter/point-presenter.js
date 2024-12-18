@@ -12,8 +12,8 @@ export default class PointPresenter {
   #pointEditComponent = null;
   #pointsModel;
   #point = null;
-  #allOffers = null;
-  #allDestinations = null;
+  #offer = null;
+  #destination = null;
   #handleModeChange = null;
   #mode = Mode.DEFAULT;
 
@@ -28,8 +28,8 @@ export default class PointPresenter {
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
     this.#point = point;
-    this.#allOffers = getOffersByType(point.type) || {};
-    this.#allDestinations = this.#pointsModel.destination;
+    this.#offer = getOffersByType(point.type) || {};
+    this.#destination = getDestinationId(point.destination) || {};
 
 
     this.#pointComponent = new TripPointView({
@@ -76,14 +76,14 @@ export default class PointPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      this.#pointEditComponent.reset(this.#point, this.#allOffers);
+      this.#pointEditComponent.reset(this.#point, this.#offer, this.#destination);
       this.#replaceFormToCard();
     }
   };
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
-      this.#pointEditComponent.reset(this.#point, this.#allOffers);
+      this.#pointEditComponent.reset(this.#point, this.#offer, this.#destination);
       this.#replaceFormToCard();
     }
   }
