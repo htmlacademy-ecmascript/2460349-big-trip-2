@@ -25,7 +25,7 @@ const mockPoints = [
       'c3e4e6-9053-42ce-b747-e281314baa32',
       'be4c3e4e6-9053-42ce-b747-e281314baa3'
     ],
-    type: 'Ship'
+    type: 'ship'
   },
 
   {
@@ -35,7 +35,7 @@ const mockPoints = [
     destination: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e03',
     isFavorite: false,
     offers: [],
-    type: 'Check-in'
+    type: 'check-in'
   }
 ];
 

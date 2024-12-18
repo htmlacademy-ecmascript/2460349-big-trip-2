@@ -21,7 +21,7 @@ const mockOffers = [
   },
 
   {
-    type: 'Ship',
+    type: 'ship',
     offers: [
       {
         id: 'b4c3e4e6-9053-42ce-b747-e281314baa03',
@@ -47,7 +47,7 @@ const mockOffers = [
   },
 
   {
-    type: 'Bus',
+    type: 'check-in',
     offers: [
       {
         id: 'b4c3e4e6-9053-42ce-b747-e281314baa31',
