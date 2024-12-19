@@ -38,8 +38,8 @@ export default class BoardPresenter {
   };
 
   #handlePointChange = (updatedPoint) => {
-    this.#tripPoints = updateItem(this.#tripPoints, updatedPoint);
-    this.#sourcedBoardPoints = updateItem(this.#sourcedBoardPoints, updatedPoint);
+    this.#tripPoints = [...updateItem(this.#tripPoints, updatedPoint)];
+    this.#sourcedBoardPoints = [...updateItem(this.#sourcedBoardPoints, updatedPoint)];
     this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
   };
 
