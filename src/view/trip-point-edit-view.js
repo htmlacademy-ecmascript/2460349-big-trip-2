@@ -68,9 +68,9 @@ function createPointTypeItem(pointId, pointType, currentPointType) {
 }
 
 const editTripPointFormTemplete = (state, allDestinations) => {
-  const { type, dateFrom, dateTo, basePrice, id } = state.point;
+  const { type, dateFrom, dateTo, basePrice, id } = state.pointForState;
   const {offers} = state.offersForState;
-  const checkedOffers = state.point.offers;
+  const checkedOffers = state.pointForState.offers;
   const { name, description, pictures } = state.destinationForState;
 
   return `
@@ -138,20 +138,25 @@ const editTripPointFormTemplete = (state, allDestinations) => {
 export default class EditTripPointView extends AbstractStatefulView {
   #allDestinations = null;
   #handleFormSubmit = null;
+  #handleDeleteClick = null;
   #startDatepicker = null;
   #endDatepicker = null;
 
-  constructor({point, offers, destination, allDestinations, onFormSubmit}) {
+  constructor({point, offers, destination, allDestinations, onFormSubmit, onDeleteClick}) {
     super();
     this.#allDestinations = allDestinations;
     this._setState(EditTripPointView.parsePointToState({ point, offers, destination }));
     this.point = point;
     this.#handleFormSubmit = onFormSubmit;
+    this.#handleDeleteClick = onDeleteClick;
     this._restoreHandlers();
   }
 
   _restoreHandlers() {
     this.element.addEventListener('submit', this.#formSubmitHandler);
+
+    this.element.querySelector('.event__reset-btn')
+      .addEventListener('click', this.#formDeleteClickHandler);
 
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#formCloseHandler);
@@ -169,14 +174,19 @@ export default class EditTripPointView extends AbstractStatefulView {
 
   }
 
-  #pointTypeChangeHandler = (evt) => {
+  #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    const updatedOffers = getOffersByType(evt.target.value)?.offers;
-    this.updateElement({
-      ...this._state,
-      point: {...this._state.point, type: evt.target.value },
-      offersForState: { type: evt.target.value, offers: updatedOffers },
-    });
+    this.#handleFormSubmit(EditTripPointView.parseStateToPoint(this._state.pointForState));
+  };
+
+  #formDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(EditTripPointView.parseStateToPoint(this._state.pointForState));
+  };
+
+  #formCloseHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit(EditTripPointView.parseStateToPoint(this.point));
   };
 
   #eventChangeHandler = (evt) => {
@@ -184,15 +194,25 @@ export default class EditTripPointView extends AbstractStatefulView {
     const isChecked = evt.target.checked;
 
     const updatedCheckedOffers = isChecked
-      ? [...this._state.point.offers, offerId]
+      ? [...this._state.pointForState.offers, offerId]
       : this._state.point.offers.filter((id) => id !== offerId);
 
     this.updateElement({
       ...this._state,
-      point: {
-        ...this._state.point,
+      pointForState: {
+        ...this._state.pointForState,
         offers: updatedCheckedOffers,
       },
+    });
+  };
+
+  #pointTypeChangeHandler = (evt) => {
+    evt.preventDefault();
+    const updatedOffers = getOffersByType(evt.target.value)?.offers;
+    this.updateElement({
+      ...this._state,
+      pointForState: {...this._state.pointForState, type: evt.target.value },
+      offersForState: { type: evt.target.value, offers: updatedOffers },
     });
   };
 
@@ -201,7 +221,7 @@ export default class EditTripPointView extends AbstractStatefulView {
     const updatedDestination = getDestinationByName(evt.target.value);
     this.updateElement({
       ...this._state,
-      point: {...this._state.point, destination: updatedDestination.id },
+      pointForState: {...this._state.pointForState, destination: updatedDestination.id },
       destinationForState: { ...updatedDestination },
     });
   };
@@ -209,7 +229,7 @@ export default class EditTripPointView extends AbstractStatefulView {
   #startDateChangeHandler = ([userDate]) => {
     this.updateElement({
       ...this._state,
-      point: {...this._state.point, dateFrom: userDate.toISOString() },
+      pointForState: {...this._state.pointForState, dateFrom: userDate.toISOString() },
     });
     this.#endDatepicker.set('minDate', userDate);
   };
@@ -217,7 +237,7 @@ export default class EditTripPointView extends AbstractStatefulView {
   #endDateChangeHandler = ([userDate]) => {
     this.updateElement({
       ...this._state,
-      point: {...this._state.point, dateTo: userDate.toISOString() },
+      pointForState: {...this._state.pointForState, dateTo: userDate.toISOString() },
     });
     this.#startDatepicker.set('maxDate', userDate);
   };
@@ -226,28 +246,26 @@ export default class EditTripPointView extends AbstractStatefulView {
     this.#startDatepicker = flatpickr(
       this.element.querySelector('input[name=event-start-time]'),
       {
-        minDate: new Date(),
-        maxDate: this._state.point.dateTo ? new Date(this._state.point.dateTo) : null,
         enableTime: true,
         dateFormat: 'd/m/y H:i',
-        defaultDate: this._state.point.dateFrom,
+        defaultDate: this._state.pointForState.dateFrom,
         onChange: this.#startDateChangeHandler,
       }
     );
     this.#endDatepicker = flatpickr(
       this.element.querySelector('input[name=event-end-time]'),
       {
-        minDate: this._state.point.dateFrom ? new Date(this._state.point.dateFrom) : new Date(),
+        minDate: this._state.pointForState.dateFrom ? new Date(this._state.pointForState.dateFrom) : new Date(),
         enableTime: true,
         dateFormat: 'd/m/y H:i',
-        defaultDate: this._state.point.dateTo,
+        defaultDate: this._state.pointForState.dateTo,
         onChange: this.#endDateChangeHandler,
       }
     );
   }
 
   static parsePointToState = ({point, offers, destination}) => ({
-    point: { ...point },
+    pointForState: { ...point },
     offersForState: { ...(offers || getOffersByType(point.type)) },
     destinationForState: { ...destination }
   });
@@ -256,17 +274,6 @@ export default class EditTripPointView extends AbstractStatefulView {
     const point = {...state};
     return point;
   };
-
-  #formSubmitHandler = (evt) => {
-    evt.preventDefault();
-    this.#handleFormSubmit(EditTripPointView.parseStateToPoint(this._state.point));
-  };
-
-  #formCloseHandler = (evt) => {
-    evt.preventDefault();
-    this.#handleFormSubmit(EditTripPointView.parseStateToPoint(this.point));
-  };
-
 
   get template() {
     return editTripPointFormTemplete(this._state, this.#allDestinations);
