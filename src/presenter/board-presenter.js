@@ -4,11 +4,13 @@ import { render, RenderPosition, remove } from '../framework/render.js';
 import NoPointView from '../view/no-point-view.js';
 import PointPresenter from './point-presenter.js';
 import { SortType, UpdateType, UserAction } from '../const.js';
-import { sortPointByDay, sortPointByTime, sortPointByPrice } from '../utils.js/point.js';
+import { sortPointByDay, sortPointByTime, sortPointByPrice } from '../utils/point.js';
+import { filter } from '../utils/filter';
 
 export default class BoardPresenter {
   #boardContainer = null;
   #pointsModel = null;
+  #filterModel = null;
   #sortComponent = null;
 
   #boardComponent = new TripsListView();
@@ -19,29 +21,32 @@ export default class BoardPresenter {
   #currentSortType = SortType.DAY;
 
 
-  constructor({container, pointsModel}) {
+  constructor({container, pointsModel, filterModel}) {
     this.#boardContainer = container;
     this.#pointsModel = pointsModel;
-
+    this.#filterModel = filterModel;
     this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
-    const sortedPoints = [...this.#pointsModel.points];
+    const filterType = this.#filterModel.filter;
+    const points = this.#pointsModel.points;
+    const filteredPoints = filter[filterType](points);
 
     switch (this.#currentSortType) {
       case SortType.DAY:
-        sortedPoints.sort(sortPointByDay);
+        filteredPoints.sort(sortPointByDay);
         break;
       case SortType.TIME:
-        sortedPoints.sort(sortPointByTime);
+        filteredPoints.sort(sortPointByTime);
         break;
       case SortType.PRICE:
-        sortedPoints.sort(sortPointByPrice);
+        filteredPoints.sort(sortPointByPrice);
         break;
     }
 
-    return sortedPoints;
+    return filteredPoints;
   }
 
   init() {
@@ -108,7 +113,7 @@ export default class BoardPresenter {
     remove(this.#noPointComponent);
 
     if (resetSortType) {
-      this.#currentSortType = SortType.DEFAULT;
+      this.#currentSortType = SortType.DAY;
     }
   }
 

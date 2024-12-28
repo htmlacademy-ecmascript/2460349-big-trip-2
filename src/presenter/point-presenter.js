@@ -2,7 +2,7 @@ import { render, replace, remove} from '../framework/render.js';
 import TripPointView from '../view/trip-point-view.js';
 import EditTripPointView from '../view/trip-point-edit-view.js';
 import { Mode, UserAction, UpdateType } from '../const.js';
-import { getDestinationId, getOffersByType, getOffersByTypeAndIds } from '../utils.js/point.js';
+import { getDestinationId, getOffersByType, getOffersByTypeAndIds } from '../utils/point.js';
 
 
 export default class PointPresenter {

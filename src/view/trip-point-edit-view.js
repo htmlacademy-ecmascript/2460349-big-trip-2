@@ -1,6 +1,6 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { DATE_FORMAT, POINT_TYPES } from '../const.js';
-import { humanizeDate, getOffersByType, getDestinationByName } from '../utils.js/point.js';
+import { humanizeDate, getOffersByType, getDestinationByName } from '../utils/point.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
