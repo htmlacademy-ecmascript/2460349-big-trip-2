@@ -51,6 +51,7 @@ export default class PointPresenter {
       allDestinations: this.#pointsModel.destination,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
+      onFormClose: this.#handleFormClose,
     });
 
     if(prevPointEditComponent === null || prevPointComponent === null) {
@@ -126,4 +127,10 @@ export default class PointPresenter {
       point,
     );
   };
+
+  #handleFormClose = () => {
+    this.#pointEditComponent.reset(this.#point, this.#offer, this.#destination);
+    this.#replaceFormToCard();
+  };
+
 }

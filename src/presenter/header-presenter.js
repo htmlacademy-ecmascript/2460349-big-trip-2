@@ -4,14 +4,16 @@ import {filter} from '../utils/filter.js';
 import {FilterType, UpdateType} from '../const.js';
 
 export default class HeaderPresenter {
-  #filterContainer = null;
+  #headerContainer = null;
   #filterModel = null;
   #pointsModel = null;
   #filterComponent = null;
+
   constructor({container, filterModel, pointsModel}) {
-    this.#filterContainer = container;
+    this.#headerContainer = container;
     this.#filterModel = filterModel;
     this.#pointsModel = pointsModel;
+
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
@@ -33,7 +35,7 @@ export default class HeaderPresenter {
       onFilterTypeChange: this.#handleFilterTypeChange
     });
     if (prevFilterComponent === null) {
-      render(this.#filterComponent, this.#filterContainer);
+      render(this.#filterComponent, this.#headerContainer);
       return;
     }
     replace(this.#filterComponent, prevFilterComponent);

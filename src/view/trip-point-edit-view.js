@@ -37,11 +37,9 @@ const createListOfferTemplate = (offers, checkedOffers) => {
   `;
 };
 
-
 const createPhotoTemplate = ({src, description}) => `<img class="event__photo" src="${src}" alt="${description}"></img>`;
 
-
-const createPhotosContainerTemplate = (pictures) => {
+const createPhotosContainerTemplate = (pictures = []) => {
   if(pictures.length <= 0){
     return '';
   }
@@ -52,6 +50,20 @@ const createPhotosContainerTemplate = (pictures) => {
        ${pictures.map((picture) => createPhotoTemplate(picture)).join('')}
     </div>
   </div>`;
+};
+
+const createDestinationTemplate = (destination) => {
+  if(destination.id === ''){
+    return '';
+  }
+
+  const {description, pictures} = destination;
+
+  return `<section class="event__section  event__section--destination">
+  <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+  <p class="event__destination-description">${description}</p>
+  ${createPhotosContainerTemplate(pictures)}
+  </section>`;
 };
 
 const createDatalistOptionsTemplate = ({name}) => `<option value="${name}"></option>`;
@@ -71,7 +83,7 @@ const editTripPointFormTemplete = (state, allDestinations) => {
   const { type, dateFrom, dateTo, basePrice, id } = state.pointForState;
   const {offers} = state.offersForState;
   const checkedOffers = state.pointForState.offers;
-  const { name, description, pictures } = state.destinationForState;
+  const { name } = state.destinationForState;
 
   return `
   <form class="event event--edit" action="#" method="post">
@@ -125,10 +137,7 @@ const editTripPointFormTemplete = (state, allDestinations) => {
     </header>
     <section class="event__details">
         ${createListOfferTemplate(offers, checkedOffers)}
-      <section class="event__section  event__section--destination">
-        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        <p class="event__destination-description">${description}</p>
-        ${createPhotosContainerTemplate(pictures)}
+        ${createDestinationTemplate(state.destinationForState)}
       </section>
     </section>
   </form>
@@ -139,16 +148,18 @@ export default class EditTripPointView extends AbstractStatefulView {
   #allDestinations = null;
   #handleFormSubmit = null;
   #handleDeleteClick = null;
+  #handleFormClose = null;
   #startDatepicker = null;
   #endDatepicker = null;
 
-  constructor({point, offers, destination, allDestinations, onFormSubmit, onDeleteClick}) {
+  constructor({point, offers, destination, allDestinations, onFormSubmit, onDeleteClick, onFormClose}) {
     super();
     this.#allDestinations = allDestinations;
     this._setState(EditTripPointView.parsePointToState({ point, offers, destination }));
     this.point = point;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleDeleteClick = onDeleteClick;
+    this.#handleFormClose = onFormClose;
     this._restoreHandlers();
   }
 
@@ -186,7 +197,7 @@ export default class EditTripPointView extends AbstractStatefulView {
 
   #formCloseHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(EditTripPointView.parseStateToPoint(this.point));
+    this.#handleFormClose();
   };
 
   #eventChangeHandler = (evt) => {
