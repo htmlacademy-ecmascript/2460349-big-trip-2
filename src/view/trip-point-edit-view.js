@@ -3,6 +3,7 @@ import { DATE_FORMAT, POINT_TYPES } from '../const.js';
 import { humanizeDate, getOffersByType, getDestinationByName } from '../utils/point.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import he from 'he';
 
 
 const createOfferTemplate = (offer, checkedOffers) => {
@@ -107,7 +108,7 @@ const editTripPointFormTemplete = (state, allDestinations) => {
         <label class="event__label  event__type-output" for="event-destination-${id}">
           ${type}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${name}" list="destination-list-${id}">
+        <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${he.encode(name)}" required list="destination-list-${id}">
         <datalist id="destination-list-${id}">
         ${allDestinations.map((target) => createDatalistOptionsTemplate(target)).join('')}
         </datalist>
@@ -126,7 +127,7 @@ const editTripPointFormTemplete = (state, allDestinations) => {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}">
+        <input class="event__input  event__input--price" id="event-price-${id}" type="number" name="event-price" value="${he.encode(String(basePrice))}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -181,6 +182,9 @@ export default class EditTripPointView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination')
       .addEventListener('blur', this.#pointDestinationBlurHandler);
 
+    this.element.querySelector('.event__input--price')
+      .addEventListener('blur', this.#pointPriceBlurHandler);
+
     this.#setDatepicker();
 
   }
@@ -206,7 +210,7 @@ export default class EditTripPointView extends AbstractStatefulView {
 
     const updatedCheckedOffers = isChecked
       ? [...this._state.pointForState.offers, offerId]
-      : this._state.point.offers.filter((id) => id !== offerId);
+      : this._state.pointForState.offers.filter((id) => id !== offerId);
 
     this.updateElement({
       ...this._state,
@@ -229,11 +233,31 @@ export default class EditTripPointView extends AbstractStatefulView {
 
   #pointDestinationBlurHandler = (evt) => {
     evt.preventDefault();
+    const allowedValues = this.#allDestinations.map((destination) => destination.name);
+
+    if(!allowedValues.includes(evt.target.value)) {
+      evt.target.value = '';
+      // return;
+    }
+
     const updatedDestination = getDestinationByName(evt.target.value);
     this.updateElement({
       ...this._state,
-      pointForState: {...this._state.pointForState, destination: updatedDestination.id },
-      destinationForState: { ...updatedDestination },
+      pointForState: {...this._state.pointForState, destination: updatedDestination?.id || ''},
+      destinationForState: {...updatedDestination || {
+        id: '',
+        description: '',
+        name: '',
+        pictures: []
+      }},
+    });
+  };
+
+  #pointPriceBlurHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      ...this._state,
+      pointForState: {...this._state.pointForState, basePrice: evt.target.value},
     });
   };
 

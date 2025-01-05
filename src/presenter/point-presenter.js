@@ -40,6 +40,7 @@ export default class PointPresenter {
       onEditClick: () => {
         this.#replaceCardToForm();
         document.addEventListener('keydown', this.#escKeyDownHandler);
+        document.addEventListener('keydown', this.#enterKeyDownHandler);
       },
       onFavoriteClick: this.#handleFavoriteClick,
     });
@@ -84,6 +85,13 @@ export default class PointPresenter {
     }
   };
 
+  #enterKeyDownHandler = (evt) => {
+    if (evt.key === 'Enter') {
+      evt.preventDefault();
+      evt.target.blur();
+    }
+  };
+
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
       this.#pointEditComponent.reset(this.#point, this.#offer, this.#destination);
@@ -101,6 +109,7 @@ export default class PointPresenter {
     replace(this.#pointComponent, this.#pointEditComponent);
     this.#mode = Mode.DEFAULT;
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+    document.removeEventListener('keydown', this.#enterKeyDownHandler);
   }
 
   #handleFavoriteClick = () => {
