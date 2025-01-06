@@ -24,7 +24,8 @@ const createOfferTemplate = (offer, checkedOffers) => {
 };
 
 const createListOfferTemplate = (offers, checkedOffers) => {
-  if (offers === undefined) {
+
+  if (offers.length === 0) {
     return '';
   }
 
@@ -147,15 +148,17 @@ const editTripPointFormTemplete = (state, allDestinations) => {
 
 export default class EditTripPointView extends AbstractStatefulView {
   #allDestinations = null;
+  #allOffers = null;
   #handleFormSubmit = null;
   #handleDeleteClick = null;
   #handleFormClose = null;
   #startDatepicker = null;
   #endDatepicker = null;
 
-  constructor({point, offers, destination, allDestinations, onFormSubmit, onDeleteClick, onFormClose}) {
+  constructor({point, offers, destination, allDestinations, allOffers, onFormSubmit, onDeleteClick, onFormClose}) {
     super();
     this.#allDestinations = allDestinations;
+    this.#allOffers = allOffers;
     this._setState(EditTripPointView.parsePointToState({ point, offers, destination }));
     this.point = point;
     this.#handleFormSubmit = onFormSubmit;
@@ -223,7 +226,7 @@ export default class EditTripPointView extends AbstractStatefulView {
 
   #pointTypeChangeHandler = (evt) => {
     evt.preventDefault();
-    const updatedOffers = getOffersByType(evt.target.value)?.offers;
+    const updatedOffers = getOffersByType(evt.target.value, this.#allOffers).offers;
     this.updateElement({
       ...this._state,
       pointForState: {...this._state.pointForState, type: evt.target.value },
@@ -237,10 +240,9 @@ export default class EditTripPointView extends AbstractStatefulView {
 
     if(!allowedValues.includes(evt.target.value)) {
       evt.target.value = '';
-      // return;
     }
 
-    const updatedDestination = getDestinationByName(evt.target.value);
+    const updatedDestination = getDestinationByName(evt.target.value, this.#allDestinations);
     this.updateElement({
       ...this._state,
       pointForState: {...this._state.pointForState, destination: updatedDestination?.id || ''},
@@ -257,14 +259,14 @@ export default class EditTripPointView extends AbstractStatefulView {
     evt.preventDefault();
     this.updateElement({
       ...this._state,
-      pointForState: {...this._state.pointForState, basePrice: evt.target.value},
+      pointForState: {...this._state.pointForState, basePrice: +evt.target.value},
     });
   };
 
   #startDateChangeHandler = ([userDate]) => {
     this.updateElement({
       ...this._state,
-      pointForState: {...this._state.pointForState, dateFrom: userDate.toISOString() },
+      pointForState: {...this._state.pointForState, dateFrom: userDate.toISOString()},
     });
     this.#endDatepicker.set('minDate', userDate);
   };
@@ -272,7 +274,7 @@ export default class EditTripPointView extends AbstractStatefulView {
   #endDateChangeHandler = ([userDate]) => {
     this.updateElement({
       ...this._state,
-      pointForState: {...this._state.pointForState, dateTo: userDate.toISOString() },
+      pointForState: {...this._state.pointForState, dateTo: userDate.toISOString()},
     });
     this.#startDatepicker.set('maxDate', userDate);
   };
@@ -301,7 +303,7 @@ export default class EditTripPointView extends AbstractStatefulView {
 
   static parsePointToState = ({point, offers, destination}) => ({
     pointForState: { ...point },
-    offersForState: { ...(offers || getOffersByType(point.type)) },
+    offersForState: { ...offers },
     destinationForState: { ...destination }
   });
 
@@ -314,9 +316,9 @@ export default class EditTripPointView extends AbstractStatefulView {
     return editTripPointFormTemplete(this._state, this.#allDestinations);
   }
 
-  reset(point, offer, destination) {
+  reset(point, offers, destination) {
     this.updateElement(
-      EditTripPointView.parsePointToState({point, offer, destination}),
+      EditTripPointView.parsePointToState({point, offers, destination}),
     );
   }
 

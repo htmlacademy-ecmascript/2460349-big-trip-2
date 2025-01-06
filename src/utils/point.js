@@ -1,7 +1,4 @@
 import dayjs from 'dayjs';
-import { mockOffers } from '../mock/offers.js';
-import { mockDestinations } from '../mock/destinations.js';
-
 
 function humanizeDate(date, format) {
   return date ? dayjs(date).format(format) : '';
@@ -23,24 +20,14 @@ const durationOfTrip = (timeA, timeB) => {
   }
 };
 
-const getDestinationId = (id) => {
-  const allDestinations = mockDestinations;
-  return allDestinations.find((item) => item.id === id);
-};
+const getDestinationId = (id, allDestinations) => allDestinations.find((item) => item.id === id);
 
-const getDestinationByName = (name) => {
-  const allDestinations = mockDestinations;
-  return allDestinations.find((item) => item.name === name);
-};
+const getDestinationByName = (name, allDestinations) => allDestinations.find((item) => item.name === name);
 
-const getOffersByType = (type) => {
-  const allOffers = mockOffers;
-  return allOffers.find((offer) => offer.type === type);
-  // return allOffers.find((offer) => offer.type === type || {type: 'not found', offers: []});
-};
+const getOffersByType = (type, allOffers) => allOffers.find((offer) => offer.type === type);
 
-const getOffersByTypeAndIds = (type, itemIds) => {
-  const offersOfType = getOffersByType(type);
+const getOffersByTypeAndIds = (type, itemIds, allOffers) => {
+  const offersOfType = getOffersByType(type, allOffers);
   return offersOfType?.offers.filter((item) => itemIds.includes(item.id)) || [];
 };
 
