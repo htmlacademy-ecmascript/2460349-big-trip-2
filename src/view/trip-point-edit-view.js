@@ -55,11 +55,11 @@ const createPhotosContainerTemplate = (pictures = []) => {
 };
 
 const createDestinationTemplate = (destination) => {
-  if(destination.id === ''){
+  const {description, pictures} = destination;
+
+  if(description === '' && pictures.length === 0){
     return '';
   }
-
-  const {description, pictures} = destination;
 
   return `<section class="event__section  event__section--destination">
   <h3 class="event__section-title  event__section-title--destination">Destination</h3>
