@@ -14,7 +14,9 @@ export default class PointPresenter {
   #pointEditComponent = null;
   #point = null;
   #offer = null;
+  #offers = null;
   #destination = null;
+  #destinations = null;
 
   #mode = Mode.DEFAULT;
 
@@ -29,14 +31,15 @@ export default class PointPresenter {
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
     this.#point = point;
-    this.#offer = getOffersByType(point.type) || {};
-    this.#destination = getDestinationId(point.destination) || {};
-
+    this.#offers = this.#pointsModel.offers;
+    this.#destinations = this.#pointsModel.destinations;
+    this.#offer = getOffersByType(point.type, this.#offers) || {};
+    this.#destination = getDestinationId(point.destination, this.#destinations) || {};
 
     this.#pointComponent = new TripPointView({
       point: point,
-      offers: [...getOffersByTypeAndIds(point.type, point.offers)],
-      destination: getDestinationId(point.destination),
+      offers: [...getOffersByTypeAndIds(point.type, point.offers, this.#offers)],
+      destination: getDestinationId(point.destination, this.#destinations),
       onEditClick: () => {
         this.#replaceCardToForm();
         document.addEventListener('keydown', this.#escKeyDownHandler);
@@ -47,9 +50,10 @@ export default class PointPresenter {
 
     this.#pointEditComponent = new EditTripPointView({
       point: this.#point,
-      offers: getOffersByType(point.type) || {},
-      destination: getDestinationId(point.destination),
-      allDestinations: this.#pointsModel.destination,
+      offers: getOffersByType(point.type, this.#offers) || {},
+      destination: getDestinationId(point.destination, this.#destinations),
+      allDestinations: this.#destinations,
+      allOffers: this.#offers,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
       onFormClose: this.#handleFormClose,
