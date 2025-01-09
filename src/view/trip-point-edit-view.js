@@ -109,7 +109,7 @@ const editTripPointFormTemplete = (state, allDestinations, allOffers) => {
         <label class="event__label  event__type-output" for="event-destination-${id}">
           ${type}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${he.encode(name)}" required list="destination-list-${id}">
+        <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${he.encode(name)}" list="destination-list-${id}">
         <datalist id="destination-list-${id}">
         ${allDestinations.map((target) => createDatalistOptionsTemplate(target)).join('')}
         </datalist>
@@ -266,7 +266,7 @@ export default class EditTripPointView extends AbstractStatefulView {
   #startDateChangeHandler = ([userDate]) => {
     this.updateElement({
       ...this._state,
-      pointForState: {...this._state.pointForState, dateFrom: userDate.toISOString()},
+      pointForState: {...this._state.pointForState, dateFrom: userDate?.toISOString() || ''},
     });
     this.#endDatepicker.set('minDate', userDate);
   };
@@ -274,7 +274,7 @@ export default class EditTripPointView extends AbstractStatefulView {
   #endDateChangeHandler = ([userDate]) => {
     this.updateElement({
       ...this._state,
-      pointForState: {...this._state.pointForState, dateTo: userDate.toISOString()},
+      pointForState: {...this._state.pointForState, dateTo: userDate?.toISOString() || ''},
     });
     this.#startDatepicker.set('maxDate', userDate);
   };

@@ -78,6 +78,10 @@ export default class NewPointPresenter {
   }
 
   #handleFormSubmit = (point) => {
+    if(point.basePrice === 0 || point.basePrice > 100000 || point.destination === '' || point.dateTo === '' || point.dateFrom === ''){
+      this.setAborting();
+      return;
+    }
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
