@@ -45,9 +45,3 @@ pointsModel.init()
     }
   });
 
-// pointsModel.init()
-//   .catch(()=>{})
-//   .finally(() => {
-//     render(newPointButtonComponent, siteHeaderElement);
-//   });
-

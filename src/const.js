@@ -5,10 +5,6 @@ const DATE_FORMAT = {
   TIME: 'HH[H] mm[M]',
 };
 
-const POINT_COUNT = 4;
-
-const POINT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
-
 const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
@@ -40,4 +36,9 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-export {DATE_FORMAT, POINT_COUNT, POINT_TYPES, FilterType, Mode, SortType, UserAction, UpdateType};
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
+export {DATE_FORMAT, FilterType, Mode, SortType, UserAction, UpdateType, TimeLimit};
