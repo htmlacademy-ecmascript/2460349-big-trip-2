@@ -1,4 +1,4 @@
-import { getRandomArrayElement } from '../utils.js/common';
+import { getRandomArrayElement } from '../utils/common';
 import { nanoid } from 'nanoid';
 
 const mockPoints = [
