@@ -1,7 +1,7 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import EditTripPointView from '../view/trip-point-edit-view.js';
-import {nanoid} from 'nanoid';
 import {UserAction, UpdateType} from '../const.js';
+import { getOffersByType } from '../utils/point.js';
 
 export default class NewPointPresenter {
   #pointListContainer = null;
@@ -31,14 +31,15 @@ export default class NewPointPresenter {
         offers: [],
         type: 'flight'
       },
-      offers: {},
+      offers: getOffersByType('flight', this.#pointsModel.offers),
       destination: {
         id: '',
         description: '',
         name: '',
-        pictures: []
+        pictures: [],
       },
-      allDestinations: this.#pointsModel.destination,
+      allDestinations: this.#pointsModel.destinations,
+      allOffers: this.#pointsModel.offers,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
       onFormClose: this.#handleFormClose,
@@ -58,13 +59,34 @@ export default class NewPointPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
+  setSaving() {
+    this.#pointEditComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#pointEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+    this.#pointEditComponent.shake(resetFormState);
+  }
+
   #handleFormSubmit = (point) => {
+    if(point.basePrice === 0 || point.basePrice > 100000 || point.destination === '' || point.dateTo === '' || point.dateFrom === ''){
+      this.setAborting();
+      return;
+    }
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      {id: nanoid(), ...point},
+      point,
     );
-    this.destroy();
   };
 
   #handleDeleteClick = () => {
