@@ -1,10 +1,8 @@
 import dayjs from 'dayjs';
 
-function humanizeDate(date, format) {
-  return date ? dayjs(date).format(format) : '';
-}
+const humanizeDate = (date, format) => date ? dayjs(date).format(format) : '';
 
-const durationOfTrip = (timeA, timeB) => {
+const getDurationOfTrip = (timeA, timeB) => {
   const durationInMinutes = Math.ceil((dayjs(timeB).diff(dayjs(timeA))) / 60000);
   const hours = Math.floor(durationInMinutes / 60);
   const day = Math.floor(hours / 24);
@@ -31,8 +29,26 @@ const getOffersByTypeAndIds = (type, itemIds, allOffers) => {
   return offersOfType?.offers.filter((item) => itemIds.includes(item.id)) || [];
 };
 
+const getOfferPrice = (itemId, allOffers) => {
+  for (const element of allOffers) {
+    if (element.id === itemId) {
+      return element.price;
+    }
+  }
+  return null;
+};
+
+const getDestinationName = (itemId, allDestinations) => {
+  for (const element of allDestinations) {
+    if (element.id === itemId) {
+      return element.name;
+    }
+  }
+  return null;
+};
+
 const sortPointByDay = (pointA, pointB) => new Date(pointA.dateFrom) - new Date(pointB.dateFrom);
 const sortPointByTime = (pointA, pointB) => (new Date(pointB.dateTo) - new Date(pointB.dateFrom)) - (new Date(pointA.dateTo) - new Date(pointA.dateFrom));
 const sortPointByPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
 
-export {humanizeDate, durationOfTrip, getDestinationId, getDestinationByName, getOffersByType, getOffersByTypeAndIds, sortPointByDay, sortPointByTime, sortPointByPrice};
+export { humanizeDate, getDurationOfTrip, getDestinationId, getDestinationByName, getOffersByType, getOffersByTypeAndIds, getOfferPrice, getDestinationName, sortPointByDay, sortPointByTime, sortPointByPrice };

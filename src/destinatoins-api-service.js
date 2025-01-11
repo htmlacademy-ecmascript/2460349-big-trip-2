@@ -21,5 +21,4 @@ export default class DestinationsApiService extends ApiService {
     const parsedResponse = await ApiService.parseResponse(response);
     return parsedResponse;
   }
-
 }

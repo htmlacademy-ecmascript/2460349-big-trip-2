@@ -1,8 +1,10 @@
-const DATE_FORMAT = {
+const DateFormat = {
   MONTH_DAY: 'MMM D',
   HOURS: 'HH:mm',
   FULL_DATE_TIME: 'DD/MM/YY HH:mm',
   TIME: 'HH[H] mm[M]',
+  DAY_MONTH: 'D MMM',
+  DAY: 'D',
 };
 
 const FilterType = {
@@ -27,6 +29,7 @@ const UserAction = {
   UPDATE_POINT: 'UPDATE_POINT',
   ADD_POINT: 'ADD_POINT',
   DELETE_POINT: 'DELETE_POINT',
+  DELETE_NEW_POINT: 'DELETE_NEW_POINT',
 };
 
 const UpdateType = {
@@ -41,4 +44,4 @@ const TimeLimit = {
   UPPER_LIMIT: 1000,
 };
 
-export {DATE_FORMAT, FilterType, Mode, SortType, UserAction, UpdateType, TimeLimit};
+export { DateFormat, FilterType, Mode, SortType, UserAction, UpdateType, TimeLimit };
