@@ -29,6 +29,7 @@ const headerPresenter = new HeaderPresenter({container: siteHeaderElement, point
 function handleNewPointFormClose() {
   newPointButtonComponent.element.disabled = false;
 }
+
 function handleNewPointButtonClick() {
   boardPresenter.createPoint();
   newPointButtonComponent.element.disabled = true;
@@ -36,7 +37,6 @@ function handleNewPointButtonClick() {
 
 headerPresenter.init();
 boardPresenter.init();
-
 
 pointsModel.init()
   .then(() => {

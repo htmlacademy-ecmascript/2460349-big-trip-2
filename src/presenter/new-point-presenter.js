@@ -1,6 +1,6 @@
-import {remove, render, RenderPosition} from '../framework/render.js';
+import { remove, render, RenderPosition } from '../framework/render.js';
 import EditTripPointView from '../view/trip-point-edit-view.js';
-import {UserAction, UpdateType} from '../const.js';
+import { UserAction, UpdateType } from '../const.js';
 import { getOffersByType } from '../utils/point.js';
 
 export default class NewPointPresenter {
@@ -78,7 +78,13 @@ export default class NewPointPresenter {
   }
 
   #handleFormSubmit = (point) => {
-    if(point.basePrice === 0 || point.basePrice > 100000 || point.destination === '' || point.dateTo === '' || point.dateFrom === ''){
+    if(point.basePrice <= 0 ||
+      point.basePrice > 100000 ||
+      point.destination === '' ||
+      point.dateTo === '' ||
+      point.dateFrom === '' ||
+      point.dateTo === point.dateFrom
+    ){
       this.setAborting();
       return;
     }
@@ -90,7 +96,10 @@ export default class NewPointPresenter {
   };
 
   #handleDeleteClick = () => {
-    this.destroy();
+    this.#handleDataChange(
+      UserAction.DELETE_NEW_POINT,
+      UpdateType.MINOR,
+    );
   };
 
   #handleFormClose = () => {

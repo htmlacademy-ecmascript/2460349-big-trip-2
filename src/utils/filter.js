@@ -1,4 +1,4 @@
-import {FilterType} from '../const';
+import { FilterType } from '../const';
 
 const currentDate = new Date();
 
@@ -8,5 +8,5 @@ const filter = {
   [FilterType.PRESENT]: (points) => points.filter((point) => currentDate >= new Date(point.dateFrom) && currentDate <= new Date(point.dateTo)),
   [FilterType.PAST]: (points) => points.filter((point) => new Date(point.dateTo) < currentDate),
 };
-export {filter};
 
+export { filter };

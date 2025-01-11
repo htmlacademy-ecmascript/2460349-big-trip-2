@@ -1,4 +1,4 @@
-import { render, replace, remove} from '../framework/render.js';
+import { render, replace, remove } from '../framework/render.js';
 import TripPointView from '../view/trip-point-view.js';
 import EditTripPointView from '../view/trip-point-edit-view.js';
 import { Mode, UserAction, UpdateType } from '../const.js';
@@ -158,7 +158,13 @@ export default class PointPresenter {
   };
 
   #handleFormSubmit = (point) => {
-    if(point.basePrice === 0 || point.basePrice > 100000 || point.destination === '' || point.dateTo === '' || point.dateFrom === ''){
+    if(point.basePrice <= 0 ||
+      point.basePrice > 100000 ||
+      point.destination === '' ||
+      point.dateTo === '' ||
+      point.dateFrom === '' ||
+      point.dateTo === point.dateFrom
+    ){
       this.setAborting();
       return;
     }
@@ -181,5 +187,4 @@ export default class PointPresenter {
     this.#pointEditComponent.reset(this.#point, this.#offer, this.#destination);
     this.#replaceFormToCard();
   };
-
 }
