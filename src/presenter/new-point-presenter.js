@@ -1,5 +1,5 @@
 import { remove, render, RenderPosition } from '../framework/render.js';
-import EditTripPointView from '../view/trip-point-edit-view.js';
+import EditTripPointView from '../view/edit-trip-point-view.js';
 import { UserAction, UpdateType } from '../const.js';
 import { getOffersByType } from '../utils/point.js';
 
@@ -41,8 +41,7 @@ export default class NewPointPresenter {
       allDestinations: this.#pointsModel.destinations,
       allOffers: this.#pointsModel.offers,
       onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick,
-      onFormClose: this.#handleFormClose,
+      onDeleteClick: this.#handleResetClick,
     });
 
     render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
@@ -95,15 +94,11 @@ export default class NewPointPresenter {
     );
   };
 
-  #handleDeleteClick = () => {
+  #handleResetClick = () => {
     this.#handleDataChange(
-      UserAction.DELETE_NEW_POINT,
+      UserAction.RESET_NEW_POINT,
       UpdateType.MINOR,
     );
-  };
-
-  #handleFormClose = () => {
-    this.#handleDeleteClick();
   };
 
   #escKeyDownHandler = (evt) => {
