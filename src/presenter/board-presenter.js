@@ -118,7 +118,7 @@ export default class BoardPresenter {
           this.#pointPresenters.get(update.id)?.setAborting();
         }
         break;
-      case UserAction.RESET_NEW_POINT:
+      case UserAction.CANCEL_NEW_POINT:
         this.#newPointPresenter.destroy();
         if (this.points.length === 0) {
           this.#renderNoPoint();
