@@ -69,6 +69,25 @@ const createDestinationTemplate = (destination) => {
 
 const createDatalistOptionsTemplate = ({name}) => `<option value="${name}"></option>`;
 
+const createRemoveButtons = (isDisabled, isDeleting, id) => {
+  let resetButton = isDeleting ? 'Deleting...' : 'Delete';
+  let rollupButton = `
+  <button class="event__rollup-btn" type="button">
+  <span class="visually-hidden">Open event</span>
+  </button>
+  `;
+
+  if(id === undefined){
+    resetButton = 'Cancel';
+    rollupButton = '';
+  }
+
+  return `
+    <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}> ${resetButton}</button>
+    ${rollupButton}
+  `;
+};
+
 const createPointTypeItem = (pointId, pointType, currentPointType) => {
   const isChecked = pointType === currentPointType ? 'checked' : '';
   const labelTitle = pointType[0].toUpperCase() + pointType.slice(1);
@@ -132,10 +151,7 @@ const editTripPointFormTemplete = (state, allDestinations, allOffers) => {
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}> ${isSaving ? 'Saving...' : 'Save'}</button>
-      <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}> ${isDeleting ? 'Deleting...' : 'Delete'}</button>
-      <button class="event__rollup-btn" type="button">
-        <span class="visually-hidden">Open event</span>
-      </button>
+      ${createRemoveButtons(isDisabled, isDeleting, id)}
     </header>
     <section class="event__details">
         ${createListOfferTemplate(offers, checkedOffers)}
@@ -150,19 +166,19 @@ export default class EditTripPointView extends AbstractStatefulView {
   #allDestinations = null;
   #allOffers = null;
   #handleFormSubmit = null;
-  #handleDeleteClick = null;
+  #handleResetClick = null;
   #handleFormClose = null;
   #startDatepicker = null;
   #endDatepicker = null;
 
-  constructor({point, offers, destination, allDestinations, allOffers, onFormSubmit, onDeleteClick, onFormClose}) {
+  constructor({point, offers, destination, allDestinations, allOffers, onFormSubmit, onResetClick, onFormClose}) {
     super();
     this.#allDestinations = allDestinations;
     this.#allOffers = allOffers;
     this._setState(EditTripPointView.parsePointToState({ point, offers, destination }));
     this.point = point;
     this.#handleFormSubmit = onFormSubmit;
-    this.#handleDeleteClick = onDeleteClick;
+    this.#handleResetClick = onResetClick;
     this.#handleFormClose = onFormClose;
     this._restoreHandlers();
   }
@@ -171,10 +187,12 @@ export default class EditTripPointView extends AbstractStatefulView {
     this.element.addEventListener('submit', this.#formSubmitHandler);
 
     this.element.querySelector('.event__reset-btn')
-      .addEventListener('click', this.#formDeleteClickHandler);
+      .addEventListener('click', this.#formResetClickHandler);
 
-    this.element.querySelector('.event__rollup-btn')
-      .addEventListener('click', this.#formCloseHandler);
+    const rollupButton = this.element.querySelector('.event__rollup-btn');
+    if(rollupButton){
+      rollupButton.addEventListener('click', this.#formCloseHandler);
+    }
 
     this.element.querySelectorAll('.event__offer-selector')
       .forEach((item) => item.addEventListener('change', this.#eventChangeHandler));
@@ -196,9 +214,9 @@ export default class EditTripPointView extends AbstractStatefulView {
     this.#handleFormSubmit(EditTripPointView.parseStateToPoint(this._state.pointForState));
   };
 
-  #formDeleteClickHandler = (evt) => {
+  #formResetClickHandler = (evt) => {
     evt.preventDefault();
-    this.#handleDeleteClick(EditTripPointView.parseStateToPoint(this._state.pointForState));
+    this.#handleResetClick(EditTripPointView.parseStateToPoint(this._state.pointForState));
   };
 
   #formCloseHandler = (evt) => {

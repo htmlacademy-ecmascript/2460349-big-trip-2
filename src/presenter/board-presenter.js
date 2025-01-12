@@ -1,5 +1,5 @@
 import SortView from '../view/sort-view.js';
-import TripsListView from '../view/trip-list-view.js';
+import TripsListView from '../view/trips-list-view.js';
 import { render, RenderPosition, remove } from '../framework/render.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import NoPointView from '../view/no-point-view.js';
@@ -118,7 +118,7 @@ export default class BoardPresenter {
           this.#pointPresenters.get(update.id)?.setAborting();
         }
         break;
-      case UserAction.DELETE_NEW_POINT:
+      case UserAction.CANCEL_NEW_POINT:
         this.#newPointPresenter.destroy();
         if (this.points.length === 0) {
           this.#renderNoPoint();

@@ -1,6 +1,6 @@
 import { render, replace, remove } from '../framework/render.js';
 import TripPointView from '../view/trip-point-view.js';
-import EditTripPointView from '../view/trip-point-edit-view.js';
+import EditTripPointView from '../view/edit-trip-point-view.js';
 import { Mode, UserAction, UpdateType } from '../const.js';
 import { getDestinationId, getOffersByType, getOffersByTypeAndIds } from '../utils/point.js';
 
@@ -55,7 +55,7 @@ export default class PointPresenter {
       allDestinations: this.#destinations,
       allOffers: this.#offers,
       onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick,
+      onResetClick: this.#handleDeleteClick,
       onFormClose: this.#handleFormClose,
     });
 
